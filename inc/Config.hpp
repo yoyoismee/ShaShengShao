@@ -1,4 +1,5 @@
-#define PROCESS_WIDTH 640 // 400
-#define PROCESS_HEIGHT 480// 360 // 225
+#define PROCESS_WIDTH 640//640 // 400
+#define PROCESS_HEIGHT 480//480// 360 // 225
 #define ROI_WIDTH 0.4
 #define ROI_COUNT 3
+#define FRAMES_SKIP 0
