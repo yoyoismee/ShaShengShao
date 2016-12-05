@@ -14,14 +14,6 @@ float dist(Point2f p1, Point2f p2) {
 	return sqrt(dx * dx + dy * dy);
 }
 
-void drawFps(Mat img) {
-	static clock_t lastFrameTime;
-	clock_t thisFrameTime = clock();
-	float dt = (float)(thisFrameTime - lastFrameTime) / CLOCKS_PER_SEC;
-	lastFrameTime = thisFrameTime;
-	putText(img, to_string(1 / dt), Point(20, 40),
-		CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 255));
-}
 
 int main(int argc, char** argv)
 {
@@ -109,7 +101,7 @@ int main(int argc, char** argv)
 		//		Scalar(255, 0, 255), 4);
 		//}
 
-		drawFps(out);
+//		drawFps(out);
 		imshow("opticalFlow", out);
 
 		oldPic = pic.clone();

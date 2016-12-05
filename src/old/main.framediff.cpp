@@ -3,6 +3,8 @@
 #include <ctime>
 #include <algorithm>
 
+#include "Utils.hpp"
+
 using namespace cv;
 using namespace std;
 
@@ -35,15 +37,6 @@ Point2f camflow (vector<Point2f> prev,vector<Point2f> next,vector<unsigned char>
     return  Point2f(retx/x.size()*(1-trim),rety/y.size()*(1-trim));
 }
 
-
-void drawFps(Mat img) {
-    static clock_t lastFrameTime;
-    clock_t thisFrameTime = clock();
-    float dt = (float)(thisFrameTime - lastFrameTime) / CLOCKS_PER_SEC;
-    lastFrameTime = thisFrameTime;
-    putText(img, to_string(1 / dt), Point(20, 40),
-            CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 255, 255));
-}
 
 
 int main() {
@@ -107,7 +100,7 @@ int main() {
             }
         }
 
-        drawFps(out);
+        Utils::drawFps(out);
         circle(out,Point2f(200,200),3,Scalar(255,0,255),-1);
         line(out, Point2f(200,200), Point2f(200,200)+camF, Scalar(180, 255, 50), 2);
 
