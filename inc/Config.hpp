@@ -9,8 +9,8 @@
 #define TRACK_QUALITY 0.01
 #define TRACK_MIN_DIST 20
 
-#define TTC_MID 120
-#define TTC_LOW 80
+#define TTC_MID 100
+#define TTC_LOW 60
 
 #define GS_BLUR_SIZE 25
 #define GS_BLUR_SIGMA_REL 0.7
