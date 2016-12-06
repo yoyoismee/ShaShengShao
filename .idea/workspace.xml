@@ -14,17 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85b0afd7-1943-49d9-ba50-0314b2ff70b9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/.gitkeep" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Utils.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main.cpp.framediff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/v1.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/v2.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/v3.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/v4.cpp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/v5.cpp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/inc/Config.hpp" afterPath="$PROJECT_DIR$/inc/Config.hpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/inc/Utils.hpp" afterPath="$PROJECT_DIR$/inc/Utils.hpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Utils.cpp" afterPath="$PROJECT_DIR$/src/Utils.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/HitAlert.cpp" afterPath="$PROJECT_DIR$/src/HitAlert.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="hitalert.iws" />
@@ -58,9 +49,11 @@
       <file leaf-file-name="HitAlert.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/HitAlert.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="210">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <folding>
+                <marker date="1480993395118" expanded="true" signature="59:81" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -324,6 +317,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="85b0afd7-1943-49d9-ba50-0314b2ff70b9" name="Default" comment="" />
@@ -332,20 +328,20 @@
       <option name="presentableId" value="Default" />
       <updated>1480953139882</updated>
       <workItem from="1480953141480" duration="1075000" />
-      <workItem from="1480954444970" duration="3276000" />
+      <workItem from="1480954444970" duration="3601000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4351000" />
+    <option name="totallyTimeSpent" value="4676000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32921347" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32921347" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921347" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -432,9 +428,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/HitAlert.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="210">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <marker date="1480993395118" expanded="true" signature="59:81" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -18,15 +18,20 @@ using namespace std;
 Mat yellow(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 255, 255));
 Mat red(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 0, 255));
 
-int gBlurSize = GS_BLUR_SIZE; // make it odd
+int gBlurSize = GS_BLUR_SIZE;
 int gBlurSigma = gBlurSize * GS_BLUR_SIGMA_REL;
 float expBlurRatio = EXP_BLUR_RATIO;
 
 int main(int argc, char** argv)
 {
 	VideoCapture cap;
-	if (!cap.open(CAP_SRC))
+#ifdef USE_WEBCAM
+	if (!cap.open(CAP_CAM_NO))
 		return 0;
+#else
+	if (!cap.open(CAP_VID_PATH CAP_VID_NAME))
+		return 0;
+#endif // USE_WEBCAM
 
 	Rect roi = Rect(0, 0, ROI_WIDTH_REL * PROCESS_WIDTH, PROCESS_HEIGHT);
 	vector<Rect> rois;

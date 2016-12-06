@@ -3,9 +3,10 @@
 HitAlert::HitAlert(Config config)
 {
 	config_ = config;
-	currentFrame_ = Mat(config_.frameHeight, config_.frameWidth, CV_8UC1);
-	previousFrame_ = Mat(config_.frameHeight, config_.frameWidth, CV_8UC1);
-	riskMap_ = Mat(config_.frameHeight, config_.frameWidth, CV_8UC1);
+	Size frameSize(config_.frameWidth, config_.frameHeight);
+	currentFrame_ = Mat(frameSize, CV_8UC1, Scalar(0));
+	previousFrame_ = Mat(frameSize, CV_8UC1, Scalar(0));
+	riskMap_ = Mat(frameSize, CV_8UC1, Scalar(0));
 }
 
 

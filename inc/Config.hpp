@@ -16,4 +16,7 @@
 #define GS_BLUR_SIGMA_REL 0.7
 #define EXP_BLUR_RATIO 0.9
 
-#define CAP_SRC "C:/Users/tae/Stuffs/Study/4_1_2110433 COMPUTER VISION/Project/hitalert/res/test4.mp4"
+//#define USE_WEBCAM
+#define CAP_CAM_NO 0
+#define CAP_VID_PATH "C:/Users/tae/Stuffs/Study/4_1_2110433 COMPUTER VISION/Project/hitalert/res/"
+#define CAP_VID_NAME "test4.mp4"
