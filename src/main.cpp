@@ -104,9 +104,21 @@ int main(int argc, char** argv)
 		bitwise_or(out, yellow, out, riskMid - riskHi);
 		bitwise_or(out, red, out, riskHi);
 
+		// center line
+		line(out, Point(out.cols / 2, 0), Point(out.cols / 2, out.rows), Scalar(255, 128, 0), 2);
+
+		//centroid of high risk areas
+		Moments m = moments(riskHi, true);
+		Point riskHiCentroid(m.m10 / m.m00, m.m01 / m.m00);
+		circle(out, riskHiCentroid, 10, Scalar(255, 0, 255), 2);
+
+		// bounding lines
+		line(out, Point(out.cols * (1 + ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 + ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+		line(out, Point(out.cols * (1 - ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 - ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+
 		Utils::drawFps(out);
 		//imshow("risk", riskMap);
-		//imshow("risk postprocessed", riskMapBlurred);
+		imshow("risk postprocessed", riskMapBlurred);
 		imshow("OUT", out);
 	}
 

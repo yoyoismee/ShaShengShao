@@ -47,4 +47,6 @@ private:
 	vector<Point2f> previousTrackedPoints_;
 	vector<Point2f> currentTrackedPoints_;
 	std::map<Point2f, Point2f, Utils::cmpPoint2f> nextPosition_;
+
+	Size2f getBoundingSize(vector<Point> points);
 };
