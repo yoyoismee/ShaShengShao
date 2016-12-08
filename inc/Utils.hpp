@@ -14,4 +14,10 @@ public:
 			return a.x != b.x ? a.x < b.x : a.y < b.y;
 		}
 	};
+
+	struct cmpPoint {
+		bool operator()(const Point& a, const Point& b) const {
+			return a.x != b.x ? a.x < b.x : a.y < b.y;
+		}
+	};
 };

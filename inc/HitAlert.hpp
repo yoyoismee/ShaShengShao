@@ -40,6 +40,8 @@ public:
 private:
 	struct Config config_;
 
+	Mat previousFrameRaw_;
+	Mat currentFrameRaw_;
 	Mat previousFrame_;	// grayscale
 	Mat currentFrame_;	// grayscale
 	Mat riskMap_;

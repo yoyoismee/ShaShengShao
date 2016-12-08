@@ -1,4 +1,4 @@
-﻿#define PROCESS_WIDTH 640//640 // 400
+﻿#define PROCESS_WIDTH 720//640 // 400
 #define PROCESS_HEIGHT 480//480// 360 // 225
 #define FRAMES_SKIP 0
 
@@ -19,5 +19,7 @@
 
 //#define USE_WEBCAM
 #define CAP_CAM_NO 0
-#define CAP_VID_PATH "C:/Users/tae/Stuffs/Study/4_1_2110433 COMPUTER VISION/Project/hitalert/res/"
-#define CAP_VID_NAME "test2.mp4"
+#define CAP_VID_PATH "../../../hitalert/test_data/"
+#define CAP_VID_NAME "30.mp4"
+
+#define DEBUG
