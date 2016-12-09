@@ -11,6 +11,8 @@
 #include "Utils.hpp"
 #include "Config.hpp"
 
+#include "Pundlik13.hpp"
+
 using namespace cv;
 using namespace std;
 
@@ -62,6 +64,16 @@ int main(int argc, char** argv)
 
 	HitAlert hitAlert(haConfig);
 
+#ifdef COMPARE
+	Pundlik13::Config plConfig;
+	plConfig.frameHeight = PROCESS_HEIGHT;
+	plConfig.frameWidth = PROCESS_WIDTH;
+	plConfig.trackMaxCorners = TRACK_CORNERS;
+	plConfig.trackQuality = TRACK_QUALITY;
+	plConfig.trackMinDistance = TRACK_MIN_DIST;
+
+	Pundlik13 pundlik(plConfig);
+#endif
 
 	Mat pic, picRaw;
 	Mat riskMapBlurred(PROCESS_HEIGHT, PROCESS_WIDTH, CV_8UC1);
@@ -102,6 +114,12 @@ int main(int argc, char** argv)
 		hitAlert.calculateRiskMap();
 		Mat riskMap = hitAlert.getRiskMap().clone();
 		hitAlert.pushFrame();
+
+#ifdef COMPARE
+		pundlik.setCurrentFrame(picRaw);
+		pundlik.calculateRiskMap();
+		pundlik.pushFrame();
+#endif
 
 		//// post processing
 		GaussianBlur(riskMap, riskMap, Size(gBlurSize, gBlurSize), gBlurSigma);

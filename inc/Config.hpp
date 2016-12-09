@@ -17,12 +17,13 @@
 #define GS_BLUR_SIGMA_REL 0.7
 #define EXP_BLUR_RATIO 0.9
 
-#define DIST_RATIO_RANGE_THRESH 0.01
-#define DIST_RATIO_COEFF 5
+#define DIST_RATIO_RANGE_THRESH 0.03
+#define DIST_RATIO_COEFF 100
 
-#define USE_WEBCAM
+//#define USE_WEBCAM
 #define CAP_CAM_NO 0
 #define CAP_VID_PATH "../../../hitalert/test_data/"
-#define CAP_VID_NAME "03.mp4"
+#define CAP_VID_NAME "01.mp4"
 
 #define DEBUG
+#define COMPARE
