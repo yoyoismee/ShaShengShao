@@ -24,14 +24,25 @@ float expBlurRatio = EXP_BLUR_RATIO;
 
 int main(int argc, char** argv)
 {
+
+	cout << argc;
 	VideoCapture cap;
+	//if (argc == 2) {
+	//	int x;
+	//	cin >> x;
+	//	// get file path as input
+	//	if (!cap.open(argv[1]))
+	//		return 0;
+	//}
+	//else {
 #ifdef USE_WEBCAM
-	if (!cap.open(CAP_CAM_NO))
-		return 0;
+		if (!cap.open(CAP_CAM_NO))
+			return 0;
 #else
-	if (!cap.open(CAP_VID_PATH CAP_VID_NAME))
-		return 0;
+		if (!cap.open(CAP_VID_PATH CAP_VID_NAME))
+			return 0;
 #endif // USE_WEBCAM
+	//}
 
 	Rect roi = Rect(0, 0, ROI_WIDTH_REL * PROCESS_WIDTH, PROCESS_HEIGHT);
 	vector<Rect> rois;
@@ -118,7 +129,9 @@ int main(int argc, char** argv)
 
 		Utils::drawFps(out);
 		//imshow("risk", riskMap);
+#ifdef DEBUG
 		imshow("risk postprocessed", riskMapBlurred);
+#endif
 		imshow("OUT", out);
 	}
 

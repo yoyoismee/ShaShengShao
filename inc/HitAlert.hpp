@@ -46,9 +46,12 @@ private:
 	Mat currentFrame_;	// grayscale
 	Mat riskMap_;
 
+	Point2f optFlowMean_;
+
 	vector<Point2f> previousTrackedPoints_;
 	vector<Point2f> currentTrackedPoints_;
 	std::map<Point2f, Point2f, Utils::cmpPoint2f> nextPosition_;
 
+	float getShapeRatio(vector<Point> pointsBefore, vector<Point> pointsAfter);
 	Size2f getBoundingSize(vector<Point> points);
 };
