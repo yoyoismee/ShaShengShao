@@ -6,6 +6,9 @@
 #include <ctime>
 #include <map>
 #include <algorithm>
+#include <memory>
+#include <Windows.h>
+#include <mmsystem.h>
 
 #include "HitAlert.hpp"
 #include "Utils.hpp"
@@ -111,6 +114,61 @@ int main(int argc, char** argv)
 		Mat riskMid, riskHi;
 		threshold(riskMapBlurred, riskMid, 255 - TTC_MID, 255, THRESH_BINARY);
 		threshold(riskMapBlurred, riskHi, 255 - TTC_LOW, 255, THRESH_BINARY);
+
+		/*calculate for play sound*/
+		imshow("riskHi", riskHi);
+		imshow("riskMid", riskMid);
+		Mat riskHiClone = riskHi.clone();
+		Mat riskMidClone = riskMid.clone();
+		if (sum(riskHi)[0] > 0){
+			//alertmids Highrisk
+			double midHighRisk = sum(riskHi(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)))[0];
+			double leftHighRisk = sum(riskHi(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
+			double rightHighRisk = sum(riskHi(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
+			if (midHighRisk > 0){
+				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/MidHigh.wav"), NULL, SND_ASYNC);
+			}
+
+#ifdef alertLeftRight
+			//alertleft and right
+			else if (leftHighRisk > 0){
+				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/LeftHigh.wav"), NULL, SND_ASYNC);
+			}
+			else if (rightHighRisk > 0){
+				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/RightHigh.wav"), NULL, SND_ASYNC);
+			}
+#endif
+		}
+		else if (sum(riskMid)[0] > 0){
+			//alertMid lowRisk
+			double midLowRisk = sum(riskMid(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)))[0];
+			double leftLowRisk = sum(riskMid(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
+			double rightLowRisk = sum(riskMid(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
+			if (midLowRisk > 0){
+				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/MidLow.wav"), NULL, SND_ASYNC);
+			}
+
+#ifdef alertLeftRight
+			//alertleft and right
+			else if (leftLowRisk > 0){
+				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/LeftLow.wav"), NULL, SND_ASYNC);
+			}
+			else if (rightLowRisk > 0){
+				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
+				PlaySound(TEXT("C:/Users/ink_f/Documents/ShaShengShao/res/RightLow.wav"), NULL, SND_ASYNC);
+			}
+#endif
+		}
+		else{
+			PlaySound(NULL, 0, 0);
+		}
+
+		/*end of play sound*/
 
 		bitwise_or(out, yellow, out, riskMid - riskHi);
 		bitwise_or(out, red, out, riskHi);
