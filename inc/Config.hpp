@@ -2,8 +2,8 @@
 //#define ALERT_LEFT_RIGHT 
 #define ALERT_HIGH_ONLY
 
-#define PROCESS_WIDTH 640//480//720//640 // 400
-#define PROCESS_HEIGHT 480//360//270//480//480// 360 // 225
+#define PROCESS_WIDTH 360//720//480//720//640 // 400
+#define PROCESS_HEIGHT 240//480//360//270//480//480// 360 // 225
 #define FRAMES_SKIP 0
 
 #define ROI_COUNT 3
@@ -14,8 +14,8 @@
 #define TRACK_QUALITY 0.05
 #define TRACK_MIN_DIST 20
 
-#define TTC_LOW 80
-#define TTC_MID 110
+#define TTC_LOW 60
+#define TTC_MID 100
 
 #define GS_BLUR_SIZE 25
 #define GS_BLUR_SIGMA_REL 0.7
@@ -27,7 +27,10 @@
 //#define USE_WEBCAM
 #define CAP_CAM_NO 0
 #define CAP_VID_PATH "../../../hitalert/test_data/"
-#define CAP_VID_NAME "01.mp4"
+#define CAP_VID_NAME "35.mp4"
+
+//#define OUTPUT_VIDEO
+#define OUTPUT_VIDEO_PATH "../../../hitalert/output/out.mp4"
 
 //#define DEBUG
 //#define COMPARE

@@ -29,10 +29,9 @@ float expBlurRatio = EXP_BLUR_RATIO;
 
 int main(int argc, char** argv)
 {
-
-	cout << argc;
+	cout << argv[0];
 	VideoCapture cap;
-	//if (argc == 2) {
+	//if (argc >= 2) {
 	//	int x;
 	//	cin >> x;
 	//	// get file path as input
@@ -48,6 +47,17 @@ int main(int argc, char** argv)
 			return 0;
 #endif // USE_WEBCAM
 	//}
+
+#ifdef OUTPUT_VIDEO
+	VideoWriter vWriter;
+	int format = VideoWriter::fourcc('A', 'V', 'C', '1');
+	//int format = cap.get(CV_CAP_PROP_FOURCC);
+	if (!vWriter.open(OUTPUT_VIDEO_PATH, format, 30, Size(PROCESS_WIDTH, PROCESS_HEIGHT))) {
+		int x;
+		cin >> x;
+		return 0;
+	}
+#endif
 
 	Rect roi = Rect(0, 0, ROI_WIDTH_REL * PROCESS_WIDTH, PROCESS_HEIGHT);
 	vector<Rect> rois;
@@ -133,9 +143,11 @@ int main(int argc, char** argv)
 		threshold(riskMapBlurred, riskMid, 255 - TTC_MID, 255, THRESH_BINARY);
 		threshold(riskMapBlurred, riskHi, 255 - TTC_LOW, 255, THRESH_BINARY);
 
-		/*calculate for play sound*/
+		// calculate for play sound
+#ifdef DEBUG
 		imshow("riskHi", riskHi);
 		imshow("riskMid", riskMid);
+#endif
 		Mat riskHiClone = riskHi.clone();
 		Mat riskMidClone = riskMid.clone();
 		if (sum(riskHi)[0] > 0){
@@ -223,6 +235,10 @@ int main(int argc, char** argv)
 		imshow("risk postprocessed", riskMapBlurred);
 #endif
 		imshow("OUT", out);
+
+#ifdef OUTPUT_VIDEO
+		vWriter << out;
+#endif
 	}
 
 	return 0;
