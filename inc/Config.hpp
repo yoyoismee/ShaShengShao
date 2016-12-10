@@ -1,4 +1,8 @@
-﻿#define PROCESS_WIDTH 640//480//720//640 // 400
+﻿#define HITALERT_BASE_PATH "../../../hitalert/"
+//#define ALERT_LEFT_RIGHT 
+#define ALERT_HIGH_ONLY
+
+#define PROCESS_WIDTH 640//480//720//640 // 400
 #define PROCESS_HEIGHT 480//360//270//480//480// 360 // 225
 #define FRAMES_SKIP 0
 
@@ -25,5 +29,5 @@
 #define CAP_VID_PATH "../../../hitalert/test_data/"
 #define CAP_VID_NAME "01.mp4"
 
-#define DEBUG
-#define COMPARE
+//#define DEBUG
+//#define COMPARE
