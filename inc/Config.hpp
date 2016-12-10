@@ -2,8 +2,8 @@
 //#define ALERT_LEFT_RIGHT 
 #define ALERT_HIGH_ONLY
 
-#define PROCESS_WIDTH 360//720//480//720//640 // 400
-#define PROCESS_HEIGHT 240//480//360//270//480//480// 360 // 225
+#define PROCESS_WIDTH 480//720//480//720//640 // 400
+#define PROCESS_HEIGHT 360//480//360//270//480//480// 360 // 225
 #define FRAMES_SKIP 0
 
 #define ROI_COUNT 3
@@ -24,7 +24,7 @@
 #define DIST_RATIO_RANGE_THRESH 0.03
 #define DIST_RATIO_COEFF 100
 
-//#define USE_WEBCAM
+#define USE_WEBCAM
 #define CAP_CAM_NO 0
 #define CAP_VID_PATH "../../../hitalert/test_data/"
 #define CAP_VID_NAME "35.mp4"

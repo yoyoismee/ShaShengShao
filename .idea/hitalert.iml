@@ -2,6 +2,7 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/Pundlik13.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/HitAlert.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/Utils.cpp" isTestSource="false" />
@@ -9,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/inc/Config.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/inc/Utils.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/inc/HitAlert.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/inc/Pundlik13.hpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
