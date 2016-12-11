@@ -20,6 +20,10 @@ using namespace cv;
 using namespace std;
 
 
+void drawOutput(Mat &out, const Mat riskHi, const Mat riskMid);
+void playAlertSound(const Mat riskHi, const Mat riskMid);
+
+
 Mat yellow(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 255, 255));
 Mat red(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 0, 255));
 
@@ -27,45 +31,27 @@ int gBlurSize = GS_BLUR_SIZE;
 int gBlurSigma = gBlurSize * GS_BLUR_SIGMA_REL;
 float expBlurRatio = EXP_BLUR_RATIO;
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
-	cout << argv[0];
 	VideoCapture cap;
-	//if (argc >= 2) {
-	//	int x;
-	//	cin >> x;
-	//	// get file path as input
-	//	if (!cap.open(argv[1]))
-	//		return 0;
-	//}
-	//else {
-#ifdef USE_WEBCAM
-		if (!cap.open(CAP_CAM_NO))
+	if (argc >= 2) {
+		string capSource(argv[1]);
+		if (!cap.open(capSource)) {
+			cout << "Error: Cannot open VideoCapture from " << capSource << ".\n";
 			return 0;
-#else
-		if (!cap.open(CAP_VID_PATH CAP_VID_NAME))
-			return 0;
-#endif // USE_WEBCAM
-	//}
+		}
+	} 
+	else if (!cap.open(CAP_SRC)) {
+		cout << "Error: Cannot open VideoCapture from " << CAP_SRC << ".\n";
+		return 0;
+	}
 
 #ifdef OUTPUT_VIDEO
 	VideoWriter vWriter;
 	int format = VideoWriter::fourcc('A', 'V', 'C', '1');
-	//int format = cap.get(CV_CAP_PROP_FOURCC);
-	if (!vWriter.open(OUTPUT_VIDEO_PATH, format, 30, Size(PROCESS_WIDTH, PROCESS_HEIGHT))) {
-		int x;
-		cin >> x;
+	if (!vWriter.open(OUTPUT_VIDEO_PATH, format, 30, Size(PROCESS_WIDTH, PROCESS_HEIGHT)))
 		return 0;
-	}
 #endif
-
-	Rect roi = Rect(0, 0, ROI_WIDTH_REL * PROCESS_WIDTH, PROCESS_HEIGHT);
-	vector<Rect> rois;
-	int maxXShift = PROCESS_WIDTH * (1 - ROI_WIDTH_REL);
-	for (int i = 0; i < ROI_COUNT; i++) {
-		int xShift = maxXShift * i / (ROI_COUNT - 1);
-		rois.push_back(roi + Point(xShift, 0));
-	}
 
 
 	HitAlert::Config haConfig;
@@ -77,6 +63,7 @@ int main(int argc, char** argv)
 
 	HitAlert hitAlert(haConfig);
 
+
 #ifdef COMPARE
 	Pundlik13::Config plConfig;
 	plConfig.frameHeight = PROCESS_HEIGHT;
@@ -87,6 +74,7 @@ int main(int argc, char** argv)
 
 	Pundlik13 pundlik(plConfig);
 #endif
+
 
 	Mat pic, picRaw;
 	Mat riskMapBlurred(PROCESS_HEIGHT, PROCESS_WIDTH, CV_8UC1);
@@ -123,6 +111,8 @@ int main(int argc, char** argv)
 		for (int i = 0; i < FRAMES_SKIP; i++)
 			cap >> discard;
 
+		////////////////////////////// risk map calculation //////////////////////////////
+
 		hitAlert.setCurrentFrame(picRaw);
 		hitAlert.calculateRiskMap();
 		Mat riskMap = hitAlert.getRiskMap().clone();
@@ -134,103 +124,25 @@ int main(int argc, char** argv)
 		pundlik.pushFrame();
 #endif
 
-		//// post processing
+		////////////////////////////// post-processing //////////////////////////////
+
+		// smoothing
 		GaussianBlur(riskMap, riskMap, Size(gBlurSize, gBlurSize), gBlurSigma);
 		riskMapBlurred = riskMapBlurred * expBlurRatio + riskMap * (1 - expBlurRatio);
 
-		Mat out = pic.clone();
+		// thresholding
 		Mat riskMid, riskHi;
 		threshold(riskMapBlurred, riskMid, 255 - TTC_MID, 255, THRESH_BINARY);
 		threshold(riskMapBlurred, riskHi, 255 - TTC_LOW, 255, THRESH_BINARY);
 
-		// calculate for play sound
-#ifdef DEBUG
-		imshow("riskHi", riskHi);
-		imshow("riskMid", riskMid);
-#endif
-		Mat riskHiClone = riskHi.clone();
-		Mat riskMidClone = riskMid.clone();
-		if (sum(riskHi)[0] > 0){
-			//alertmids Highrisk
-			double midHighRisk = sum(riskHi(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)))[0];
-			double leftHighRisk = sum(riskHi(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
-			double rightHighRisk = sum(riskHi(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
-			if (midHighRisk > 0){
-#ifdef DEBUG
-				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-
-#ifdef ALERT_LEFT_RIGHT
-			//alertleft and right
-			else if (leftHighRisk > 0){
-#ifdef DEBUG
-				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-			else if (rightHighRisk > 0){
-#ifdef DEBUG
-				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-#endif
-		}
-		else if (sum(riskMid)[0] > 0){
-			//alertMid lowRisk
-			double midLowRisk = sum(riskMid(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)))[0];
-			double leftLowRisk = sum(riskMid(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
-			double rightLowRisk = sum(riskMid(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)))[0];
-#ifndef ALERT_HIGH_ONLY
-			if (midLowRisk > 0){
-#ifdef DEBUG
-				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-#endif
-
-#ifdef ALERT_LEFT_RIGHT
-			//alertleft and right
-			else if (leftLowRisk > 0){
-#ifdef DEBUG
-				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-			else if (rightLowRisk > 0){
-#ifdef DEBUG
-				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
-#endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
-			}
-#endif
-		}
-		else{
-			PlaySound(NULL, 0, 0);
-		}
-
-		/*end of play sound*/
-
-		bitwise_or(out, yellow, out, riskMid - riskHi);
-		bitwise_or(out, red, out, riskHi);
-
-		// center line
-		line(out, Point(out.cols / 2, 0), Point(out.cols / 2, out.rows), Scalar(255, 128, 0), 2);
-
-		//centroid of high risk areas
-		Moments m = moments(riskHi, true);
-		Point riskHiCentroid(m.m10 / m.m00, m.m01 / m.m00);
-		circle(out, riskHiCentroid, 10, Scalar(255, 0, 255), 2);
-
-		// bounding lines
-		line(out, Point(out.cols * (1 + ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 + ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
-		line(out, Point(out.cols * (1 - ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 - ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+		// ---------- draw output image  ---------- 
+		Mat out = pic.clone();
+		drawOutput(out, riskHi, riskMid);
+		
+		// alert
+		playAlertSound(riskHi, riskMid);
 
 		Utils::drawFps(out);
-		//imshow("risk", riskMap);
 #ifdef DEBUG
 		imshow("risk postprocessed", riskMapBlurred);
 #endif
@@ -242,4 +154,85 @@ int main(int argc, char** argv)
 	}
 
 	return 0;
+}
+
+
+
+void drawOutput(Mat &out, const Mat riskHi, const Mat riskMid)
+{
+	// make risk area on output image red/yellow
+	bitwise_or(out, yellow, out, riskMid - riskHi);
+	bitwise_or(out, red, out, riskHi);
+
+	// center line
+	line(out, Point(out.cols / 2, 0), Point(out.cols / 2, out.rows), Scalar(255, 128, 0), 2);
+
+	//centroid of high risk areas
+	Moments m = moments(riskHi, true);
+	Point riskHiCentroid(m.m10 / m.m00, m.m01 / m.m00);
+	circle(out, riskHiCentroid, 10, Scalar(255, 0, 255), 2);
+
+	// bounding lines
+	line(out, Point(out.cols * (1 + ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 + ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+	line(out, Point(out.cols * (1 - ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 - ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+}
+
+
+
+void playAlertSound(const Mat riskHi, const Mat riskMid)
+{
+	// calculate for play sound
+#ifdef DEBUG
+	imshow("riskHi", riskHi);
+	imshow("riskMid", riskMid);
+#endif
+	int centerRoiWidth = PROCESS_WIDTH * ROI_WIDTH_REL;
+	int sideRoiWidth = (PROCESS_WIDTH - centerRoiWidth) / 2;
+	Rect centerRoi((PROCESS_WIDTH - centerRoiWidth) / 2, 0, centerRoiWidth, PROCESS_HEIGHT);
+	Rect leftRoi(0, 0, sideRoiWidth, PROCESS_HEIGHT);
+	Rect rightRoi((PROCESS_WIDTH + centerRoiWidth) / 2, 0, sideRoiWidth, PROCESS_HEIGHT);
+
+	Mat riskHiClone = riskHi.clone();
+	Mat riskMidClone = riskMid.clone();
+	if (sum(riskHi)[0] > 0) {
+		// alert Highrisk
+		double midHighRisk = sum(riskHi(centerRoi))[0];
+		double leftHighRisk = sum(riskHi(leftRoi))[0];
+		double rightHighRisk = sum(riskHi(rightRoi))[0];
+		if (midHighRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+#ifdef ALERT_LEFT_RIGHT
+		// alert left and right
+		else if (leftHighRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+		else if (rightHighRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+#endif
+	}
+	else if (sum(riskMid)[0] > 0) {
+		// alert lowRisk
+		double midLowRisk = sum(riskMid(centerRoi))[0];
+		double leftLowRisk = sum(riskMid(leftRoi))[0];
+		double rightLowRisk = sum(riskMid(rightRoi))[0];
+#ifndef ALERT_HIGH_ONLY
+		if (midLowRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+#ifdef ALERT_LEFT_RIGHT
+		// alert left and right
+		else if (leftLowRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+		else if (rightLowRisk > 0) {
+			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+		}
+#endif
+#endif
+	}
+	else {
+		PlaySound(NULL, 0, 0);
+	}
 }
