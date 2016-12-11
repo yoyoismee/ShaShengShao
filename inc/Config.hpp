@@ -1,11 +1,11 @@
 ﻿// -------------------- debugs --------------------
-#define DEBUG
+//#define DEBUG
 //#define COMPARE
 
 
 // -------------------- paths --------------------
 #define HITALERT_BASE_PATH "../../../hitalert/"
-#define HITALERT_RUNTIME_PATH "" //HITALERT_BASE_PATH
+#define HITALERT_RUNTIME_PATH HITALERT_BASE_PATH
 
 #define SOUND_C_HI HITALERT_RUNTIME_PATH "res/MidHigh.wav"
 #define SOUND_R_HI HITALERT_RUNTIME_PATH "res/RightHigh.wav"
@@ -16,10 +16,10 @@
 
 
 // -------------------- input --------------------
-#define USE_WEBCAM
+//#define USE_WEBCAM
 #define CAP_CAM_NO 0
 #define CAP_VID_PATH HITALERT_BASE_PATH "test_data/"
-#define CAP_VID_NAME "35.mp4"
+#define CAP_VID_NAME "01.mp4"
 
 
 // -------------------- output --------------------
@@ -27,7 +27,7 @@
 #define OUTPUT_VIDEO_PATH HITALERT_BASE_PATH "output/out.mp4"
 
 //#define ALERT_LEFT_RIGHT 
-//#define ALERT_HIGH_ONLY
+#define ALERT_HIGH_ONLY
 
 
 // -------------------- image config --------------------

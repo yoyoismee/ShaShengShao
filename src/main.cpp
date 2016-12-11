@@ -200,15 +200,15 @@ void playAlertSound(const Mat riskHi, const Mat riskMid)
 		double leftHighRisk = sum(riskHi(leftRoi))[0];
 		double rightHighRisk = sum(riskHi(rightRoi))[0];
 		if (midHighRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_C_HI), NULL, SND_ASYNC);
 		}
 #ifdef ALERT_LEFT_RIGHT
 		// alert left and right
 		else if (leftHighRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_L_HI), NULL, SND_ASYNC);
 		}
 		else if (rightHighRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_R_HI), NULL, SND_ASYNC);
 		}
 #endif
 	}
@@ -219,15 +219,15 @@ void playAlertSound(const Mat riskHi, const Mat riskMid)
 		double rightLowRisk = sum(riskMid(rightRoi))[0];
 #ifndef ALERT_HIGH_ONLY
 		if (midLowRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_C_LOW), NULL, SND_ASYNC);
 		}
 #ifdef ALERT_LEFT_RIGHT
 		// alert left and right
 		else if (leftLowRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_L_LOW), NULL, SND_ASYNC);
 		}
 		else if (rightLowRisk > 0) {
-			PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+			PlaySound(TEXT(SOUND_R_LOW), NULL, SND_ASYNC);
 		}
 #endif
 #endif
