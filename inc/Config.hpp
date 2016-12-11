@@ -5,7 +5,7 @@
 
 // -------------------- paths --------------------
 #define HITALERT_BASE_PATH "../../../hitalert/"
-#define HITALERT_RUNTIME_PATH HITALERT_BASE_PATH
+#define HITALERT_RUNTIME_PATH "" //HITALERT_BASE_PATH
 
 #define SOUND_C_HI HITALERT_RUNTIME_PATH "res/MidHigh.wav"
 #define SOUND_R_HI HITALERT_RUNTIME_PATH "res/RightHigh.wav"
