@@ -27,7 +27,7 @@
 #define OUTPUT_VIDEO_PATH HITALERT_BASE_PATH "output/out.mp4"
 
 //#define ALERT_LEFT_RIGHT 
-#define ALERT_HIGH_ONLY
+//#define ALERT_HIGH_ONLY
 
 
 // -------------------- image config --------------------
@@ -35,7 +35,6 @@
 #define PROCESS_HEIGHT 360//480
 #define FRAMES_SKIP 0
 
-#define ROI_COUNT 3
 #define ROI_WIDTH_REL 0.36
 // calculated from human dimension of 60 cm in width, 50cm distance with 60 deg FOV camera
 
@@ -45,7 +44,7 @@
 #define TRACK_QUALITY 0.05
 #define TRACK_MIN_DIST 20
 
-#define TTC_LOW 60
+#define TTC_LOW 70
 #define TTC_MID 100
 
 #define GS_BLUR_SIZE 25
