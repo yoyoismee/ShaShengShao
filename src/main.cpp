@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 #ifdef DEBUG
 		imshow("risk postprocessed", riskMapBlurred);
 #endif
-		imshow("OUT", out);
+		imshow("HitAlert", out);
 
 #ifdef OUTPUT_VIDEO
 		vWriter << out;

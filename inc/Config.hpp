@@ -16,7 +16,7 @@
 
 
 // -------------------- input --------------------
-//#define USE_WEBCAM
+#define USE_WEBCAM
 #define CAP_CAM_NO 0
 #define CAP_VID_PATH HITALERT_BASE_PATH "test_data/"
 #define CAP_VID_NAME "01.mp4"
