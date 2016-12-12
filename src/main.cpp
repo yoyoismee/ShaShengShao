@@ -15,6 +15,7 @@
 #include "Config.hpp"
 
 #include "Pundlik13.hpp"
+#define HITALERT_ALERT_MID_HIGH "res/MidHigh.wav"
 
 using namespace cv;
 using namespace std;
@@ -92,7 +93,7 @@ int main(int argc, char** argv)
 	Mat riskMapBlurred(PROCESS_HEIGHT, PROCESS_WIDTH, CV_8UC1);
 	bool isPaused = false;
 	bool isStepping = false; 
-
+	int playSoundFlag = 0;
 	while (true) {
 		{
 			if (isStepping)
@@ -159,7 +160,12 @@ int main(int argc, char** argv)
 #ifdef DEBUG
 				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				
+				//PlaySound(TEXT("C:/Users/ink_f/Documents/Visual Studio 2013/Projects/cv_project_test/x64/Release/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 1) { PlaySound(TEXT("res/MidHigh.wav"), NULL, SND_ASYNC);  playSoundFlag = 1; }
+				else if(playSoundFlag == 1){ PlaySound(TEXT("res/MidHigh.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
+				
+				//cout << "playing sound mid high";
 			}
 
 #ifdef ALERT_LEFT_RIGHT
@@ -168,13 +174,15 @@ int main(int argc, char** argv)
 #ifdef DEBUG
 				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 2) { PlaySound(TEXT("res/LeftHigh.wav"), NULL, SND_ASYNC);  playSoundFlag = 2; }
+				else if(playSoundFlag == 2){ PlaySound(TEXT("res/LeftHigh.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
 			}
 			else if (rightHighRisk > 0){
 #ifdef DEBUG
 				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 3) { PlaySound(TEXT("res/RightHigh.wav"), NULL, SND_ASYNC);  playSoundFlag = 3; }
+				else if (playSoundFlag == 3){ PlaySound(TEXT("res/RightHigh.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
 			}
 #endif
 		}
@@ -188,7 +196,8 @@ int main(int argc, char** argv)
 #ifdef DEBUG
 				imshow("middle", out(Rect(PROCESS_WIDTH / 2.0 - (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.36, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 4) { PlaySound(TEXT("res/MidLow.wav"), NULL, SND_ASYNC);  playSoundFlag = 4; }
+				else if(playSoundFlag == 4){ PlaySound(TEXT("res/MidLow.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
 			}
 #endif
 
@@ -198,18 +207,21 @@ int main(int argc, char** argv)
 #ifdef DEBUG
 				imshow("left", out(Rect(0, 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 5) { PlaySound(TEXT("res/LeftLow.wav"), NULL, SND_ASYNC);  playSoundFlag = 5; }
+				else if (playSoundFlag == 5){ PlaySound(TEXT("res/LeftLow.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
 			}
 			else if (rightLowRisk > 0){
 #ifdef DEBUG
 				imshow("right", out(Rect(PROCESS_WIDTH / 2.0 + (PROCESS_WIDTH*0.18), 0, PROCESS_WIDTH*0.32, PROCESS_HEIGHT)));
 #endif
-				PlaySound(TEXT(HITALERT_BASE_PATH "/res/MidHigh.wav"), NULL, SND_ASYNC);
+				if (playSoundFlag != 6) { PlaySound(TEXT("res/RightLow.wav"), NULL, SND_ASYNC);  playSoundFlag = 6; }
+				else if (playSoundFlag == 6){ PlaySound(TEXT("res/RightLow.wav"), NULL, SND_ASYNC | SND_NOSTOP); }
 			}
 #endif
 		}
 		else{
 			PlaySound(NULL, 0, 0);
+			playSoundFlag = 0;
 		}
 
 		/*end of play sound*/
@@ -240,6 +252,6 @@ int main(int argc, char** argv)
 		vWriter << out;
 #endif
 	}
-
+	//cin.get();
 	return 0;
 }
