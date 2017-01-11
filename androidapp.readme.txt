@@ -1,0 +1,11 @@
+well I have to admit that I have no idea about android app 
+of cause...it work on my machine but if it not working with your 
+here is some note that may help you
+- used andriod studio
+- followed http://stackoverflow.com/questions/27406303/opencv-in-android-studio
+- some dependency shit
+- anytime i got any error i followed what it suggest
+- well if they say which module missing i google and install it with out configing anything
+
+glhf
+Pj.

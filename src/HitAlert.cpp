@@ -44,7 +44,6 @@ void HitAlert::calculateRiskMap()
 {
 	riskMap_ = 0;
 	nextPosition_.clear();
-
 	goodFeaturesToTrack(
 		previousFrame_, previousTrackedPoints_, 
 		config_.trackMaxCorners, 
@@ -232,48 +231,47 @@ Size2f HitAlert::getBoundingSize(vector<Point> points)
 
 
 
-inline float HitAlert::getShapeRatio(vector<Point> pointsBefore, vector<Point> pointsAfter) 
-{
-	//Size2f boundSizeBefore = getBoundingSize(pointsBefore);
-	//Size2f boundSizeAfter = getBoundingSize(pointsAfter);
+inline float HitAlert::getShapeRatio(vector<Point> pointsBefore, vector<Point> pointsAfter) {
+    //Size2f boundSizeBefore = getBoundingSize(pointsBefore);
+    //Size2f boundSizeAfter = getBoundingSize(pointsAfter);
 
-	//float heightRatio = boundSizeAfter.height / boundSizeBefore.height;
-	//float widthRatio = boundSizeAfter.width / boundSizeBefore.width;
-	//float shapeRatio = heightRatio / widthRatio;
-	//if (shapeRatio < 1)
-	//	shapeRatio = 1 / shapeRatio;
-	//
-	//// try...
-	//if (shapeRatio > 1.01) {
-	//	shapeRatio = pow(shapeRatio, 10);
-	//}
+    //float heightRatio = boundSizeAfter.height / boundSizeBefore.height;
+    //float widthRatio = boundSizeAfter.width / boundSizeBefore.width;
+    //float shapeRatio = heightRatio / widthRatio;
+    //if (shapeRatio < 1)
+    //	shapeRatio = 1 / shapeRatio;
+    //
+    //// try...
+    //if (shapeRatio > 1.01) {
+    //	shapeRatio = pow(shapeRatio, 10);
+    //}
 
-	//vector<float> distRatios;
-	float distRatioMean = 0;
+    //vector<float> distRatios;
+    float distRatioMean = 0;
 
-	Point frameCenter(config_.frameWidth / 2, config_.frameHeight / 2);
-	frameCenter.x += optFlowMean_.x;
-	frameCenter.y += optFlowMean_.y;
+    Point frameCenter(config_.frameWidth / 2, config_.frameHeight / 2);
+    frameCenter.x += optFlowMean_.x;
+    frameCenter.y += optFlowMean_.y;
 
-	float minDistRatio = 1000, maxDistRatio = 0;
+    float minDistRatio = 1000, maxDistRatio = 0;
 
-	for (int i = 0; i < pointsBefore.size(); i++) {
-		// TODO check?
-		float distRatio = norm((pointsBefore[i] - frameCenter)) / norm((pointsAfter[i] - frameCenter));
-		//distRatios.push_back(distRatio);
-		//distRatioMean += distRatio;
+    for (int i = 0; i < pointsBefore.size(); i++) {
+        // TODO check?
+        float distRatio = norm((pointsBefore[i] - frameCenter)) / norm((pointsAfter[i] - frameCenter));
+        //distRatios.push_back(distRatio);
+        //distRatioMean += distRatio;
 
-		if (distRatio > maxDistRatio)
-			maxDistRatio = distRatio;
-		if (distRatio < minDistRatio)
-			minDistRatio = distRatio;
-	}
+        if (distRatio > maxDistRatio)
+            maxDistRatio = distRatio;
+        if (distRatio < minDistRatio)
+            minDistRatio = distRatio;
+    }
 
-	//distRatioMean /= pointsBefore.size();
-	float shapeRatio = maxDistRatio - minDistRatio;
-	shapeRatio = shapeRatio > DIST_RATIO_RANGE_THRESH ? 
-		1 + (shapeRatio - DIST_RATIO_RANGE_THRESH) * DIST_RATIO_COEFF: 1;
-	//shapeRatio = shapeRatio * 100;
+    //distRatioMean /= pointsBefore.size();
+    float shapeRatio = maxDistRatio - minDistRatio;
+    shapeRatio = shapeRatio > DIST_RATIO_RANGE_THRESH ?
+                 1 + (shapeRatio - DIST_RATIO_RANGE_THRESH) * DIST_RATIO_COEFF : 1;
+    //shapeRatio = shapeRatio * 100;
 
-	return shapeRatio;
+    return shapeRatio;
 }
