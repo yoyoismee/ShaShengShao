@@ -24,14 +24,24 @@ void drawOutput(Mat &out, const Mat riskHi, const Mat riskMid);
 void playAlertSound(const Mat riskHi, const Mat riskMid);
 
 
-Mat yellow(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 255, 255));
-Mat red(Size(PROCESS_WIDTH, PROCESS_HEIGHT), CV_8UC3, Vec3b(0, 0, 255));
+Mat yellow(Size(PROCESS_WIDTH + FRAME_PADDING * 2, PROCESS_HEIGHT + FRAME_PADDING * 2), CV_8UC3, Vec3b(0, 255, 255));
+Mat red(Size(PROCESS_WIDTH + FRAME_PADDING * 2, PROCESS_HEIGHT + FRAME_PADDING * 2), CV_8UC3, Vec3b(0, 0, 255));
 
 int gBlurSize = GS_BLUR_SIZE;
 int gBlurSigma = gBlurSize * GS_BLUR_SIGMA_REL;
 float expBlurRatio = EXP_BLUR_RATIO;
 
 int playSoundFlag = 0;
+
+int centerRoiWidth = PROCESS_WIDTH * ROI_WIDTH_REL;
+int sideRoiWidth = (PROCESS_WIDTH - centerRoiWidth) / 2;
+Rect centerRoi(
+	(PROCESS_WIDTH - centerRoiWidth) / 2 + FRAME_PADDING, FRAME_PADDING - ROI_Y_OFFSET, 
+	centerRoiWidth, PROCESS_HEIGHT + ROI_Y_OFFSET * 2
+	);
+Rect leftRoi(FRAME_PADDING, FRAME_PADDING, sideRoiWidth, PROCESS_HEIGHT);
+Rect rightRoi((PROCESS_WIDTH + centerRoiWidth) / 2 + FRAME_PADDING, FRAME_PADDING, sideRoiWidth, PROCESS_HEIGHT);
+
 
 int main(int argc, char* argv[])
 {
@@ -79,7 +89,7 @@ int main(int argc, char* argv[])
 
 
 	Mat pic, picRaw;
-	Mat riskMapBlurred(PROCESS_HEIGHT, PROCESS_WIDTH, CV_8UC1);
+	Mat riskMapBlurred(PROCESS_HEIGHT + FRAME_PADDING * 2, PROCESS_WIDTH + FRAME_PADDING * 2, CV_8UC1);
 	bool isPaused = false;
 	bool isStepping = false; 
 	while (true) {
@@ -162,6 +172,7 @@ int main(int argc, char* argv[])
 void drawOutput(Mat &out, const Mat riskHi, const Mat riskMid)
 {
 	// make risk area on output image red/yellow
+	copyMakeBorder(out, out, FRAME_PADDING, FRAME_PADDING, FRAME_PADDING, FRAME_PADDING, BORDER_CONSTANT);
 	bitwise_or(out, yellow, out, riskMid - riskHi);
 	bitwise_or(out, red, out, riskHi);
 
@@ -173,9 +184,11 @@ void drawOutput(Mat &out, const Mat riskHi, const Mat riskMid)
 	Point riskHiCentroid(m.m10 / m.m00, m.m01 / m.m00);
 	circle(out, riskHiCentroid, 10, Scalar(255, 0, 255), 2);
 
+
 	// bounding lines
-	line(out, Point(out.cols * (1 + ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 + ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
-	line(out, Point(out.cols * (1 - ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 - ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+	rectangle(out, centerRoi, Scalar(255, 255, 0), 2);
+	//line(out, Point(out.cols * (1 + ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 + ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
+	//line(out, Point(out.cols * (1 - ROI_WIDTH_REL) / 2, 0), Point(out.cols * (1 - ROI_WIDTH_REL) / 2, out.rows), Scalar(255, 255, 0), 2);
 }
 
 
@@ -187,12 +200,7 @@ void playAlertSound(const Mat riskHi, const Mat riskMid)
 	imshow("riskHi", riskHi);
 	imshow("riskMid", riskMid);
 #endif
-	int centerRoiWidth = PROCESS_WIDTH * ROI_WIDTH_REL;
-	int sideRoiWidth = (PROCESS_WIDTH - centerRoiWidth) / 2;
-	Rect centerRoi((PROCESS_WIDTH - centerRoiWidth) / 2, 0, centerRoiWidth, PROCESS_HEIGHT);
-	Rect leftRoi(0, 0, sideRoiWidth, PROCESS_HEIGHT);
-	Rect rightRoi((PROCESS_WIDTH + centerRoiWidth) / 2, 0, sideRoiWidth, PROCESS_HEIGHT);
-
+	
 	Mat riskHiClone = riskHi.clone();
 	Mat riskMidClone = riskMid.clone();
 	if (sum(riskHi)[0] > 0) {
