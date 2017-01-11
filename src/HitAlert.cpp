@@ -7,6 +7,7 @@ HitAlert::HitAlert(Config config)
 	currentFrame_ = Mat(frameSize, CV_8UC1, Scalar(0));
 	previousFrame_ = Mat(frameSize, CV_8UC1, Scalar(0));
 	riskMap_ = Mat(frameSize, CV_8UC1, Scalar(0));
+	copyMakeBorder(riskMap_, riskMap_, FRAME_PADDING, FRAME_PADDING, FRAME_PADDING, FRAME_PADDING, BORDER_CONSTANT);
 }
 
 
@@ -20,6 +21,23 @@ void HitAlert::setCurrentFrame(const Mat& newFrame)
 	resize(newFrameGray, currentFrame_, Size(config_.frameWidth, config_.frameHeight));
 
 	// TODO Preprocess?
+
+	//Mat ex, ey;
+	//GaussianBlur(currentFrame_, currentFrame_, Size(5, 5), 3);
+	//Sobel(currentFrame_, ex, CV_16S, 1, 0);
+	//Sobel(currentFrame_, ey, CV_16S, 0, 1);
+	//convertScaleAbs(ex, ex);
+
+	//convertScaleAbs(ey, ey);
+	//bitwise_or(ex, ey, currentFrame_);
+	//
+	//Mat normalized;
+	//currentFrame_.convertTo(normalized, CV_32F);
+	//sqrt(normalized / 255, normalized);
+	//normalized *= 255;
+	//normalized.convertTo(currentFrame_, CV_8UC1);
+
+	//Canny(currentFrame_, currentFrame_, 60, 180);
 
 	////Mat sharpen = (
 	////	Mat_<uchar>(3, 3) <<
@@ -94,6 +112,9 @@ void HitAlert::calculateRiskMap()
 	Mat riskMapTest(config_.frameHeight, config_.frameWidth, CV_8UC1);
 
 	vector<vector<Point>> trianglesBefore, trianglesAfter;
+
+	vector<pair<float, vector<Point>>> trianglesToDraw;
+
 	for (int i = 0; i < triangles.size(); i++) {
 		Vec6f t = triangles[i];
 		vector<Point> pointsBefore;
@@ -123,16 +144,31 @@ void HitAlert::calculateRiskMap()
 		//float ttc = sqrt(areaAfter * areaBefore) / (areaAfter - areaBefore);
 		timeToCollides.push_back(ttc);
 
-		Scalar color = Scalar(ttc >= 0 ? (255 - ttc * shapeRatio) : 0);
-		fillConvexPoly(riskMap_, pointsAfter, color);
+		
+		
+		for (int j = 0; j < pointsBefore.size(); j++) {
+			pointsAfter[j] += (pointsAfter[j] - pointsBefore[j]) * ttc + Point(FRAME_PADDING, FRAME_PADDING);
+		}
 
-		fillConvexPoly(riskMapTest, pointsAfter, Scalar(ttc >= 0 ? (255 - ttc) : 0));
+		trianglesToDraw.push_back(make_pair(ttc, pointsAfter));
+		//fillConvexPoly(riskMapTest, pointsAfter, color); // Scalar(ttc >= 0 ? (255 - ttc) : 0));
+	}
+
+	sort(trianglesToDraw.begin(), trianglesToDraw.end(), ttcShapeLess());
+	for (int i = 0; i < trianglesToDraw.size(); i++) {
+		float ttc = trianglesToDraw[i].first;
+		Scalar color = Scalar(ttc >= 0 ? (255 - ttc) : 0);
+		fillConvexPoly(riskMap_, trianglesToDraw[i].second, color);
 	}
 
 #ifdef DEBUG
 	// breakdown
-	Mat trackedPoints = previousFrameRaw_.clone();
-	Mat optFlow = previousFrameRaw_.clone();
+	Mat trackedPoints = previousFrame_.clone();
+	cvtColor(trackedPoints, trackedPoints, CV_GRAY2BGR);
+
+	Mat optFlow = previousFrame_.clone();
+	cvtColor(optFlow, optFlow, CV_GRAY2BGR);
+
 	Mat delaunay = previousFrameRaw_.clone();
 	Mat delaunayCompare = previousFrameRaw_.clone();
 	for (int i = 0; i < previousTrackedPoints_.size(); i++) {
@@ -170,7 +206,7 @@ void HitAlert::calculateRiskMap()
 	}
 
 	imshow("Tracked Points", trackedPoints);
-	imshow("rt", riskMapTest);
+	//imshow("rt", riskMapTest);
 	imshow("Optical Flow", optFlow);
 	imshow("Delaunay Triangulation", delaunay);
 	imshow("Delaunay Before/After", delaunayCompare);

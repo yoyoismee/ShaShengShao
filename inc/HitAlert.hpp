@@ -46,6 +46,8 @@ private:
 	Mat currentFrame_;	// grayscale
 	Mat riskMap_;
 
+	int riskMapPadding_ = 100;
+
 	Point2f optFlowMean_;
 
 	vector<Point2f> previousTrackedPoints_;
@@ -54,4 +56,10 @@ private:
 
 	float getShapeRatio(vector<Point> pointsBefore, vector<Point> pointsAfter);
 	Size2f getBoundingSize(vector<Point> points);
+
+	struct ttcShapeLess {
+		inline bool operator() (const pair<float, vector<Point>>& t1, const pair<float, vector<Point>>& t2) {
+			return t1.first < t2.first;
+		}
+	};
 };
