@@ -16,7 +16,6 @@
 
 #include "Pundlik13.hpp"
 
-
 using namespace cv;
 using namespace std;
 
@@ -217,8 +216,8 @@ void playAlertSound(const Mat riskHi, const Mat riskMid)
 		// alert left and right
 		else if (leftHighRisk > 0) {
 			//PlaySound(TEXT(SOUND_L_HI), NULL, SND_ASYNC);
-			if (playSoundFlag != 2) { PlaySound(TEXT(SOUND_L_HI), NULL, SND_ASYNC);  playSoundFlag = 2; }
-			else if (playSoundFlag == 2) { PlaySound(TEXT(SOUND_L_HI), NULL, SND_ASYNC | SND_NOSTOP); }
+			if (playSoundFlag != 2) { PlaySound(TEXT( SOUND_L_HI ), NULL, SND_ASYNC);  playSoundFlag = 2; }
+			else if (playSoundFlag == 2) { PlaySound(TEXT( SOUND_L_HI ), NULL, SND_ASYNC | SND_NOSTOP); }
 		}
 		else if (rightHighRisk > 0) {
 			//PlaySound(TEXT(SOUND_R_HI), NULL, SND_ASYNC);
